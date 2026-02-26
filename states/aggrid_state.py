@@ -53,6 +53,22 @@ class AgGridState(SessionStateWrapper):
 
     #endregion
 
+    #region: is_dirty property
+
+    @property
+    def is_dirty(self) -> bool:
+        return self._get_val("is_dirty", False)
+
+    @is_dirty.setter
+    def is_dirty(self, value: bool) -> None:
+        self._set_val("is_dirty", value)
+
+    @is_dirty.deleter
+    def is_dirty(self) -> None:
+        self._del_val("is_dirty")
+
+    #endregion
+
     def get_grid_data(self):
         # st.session_state から AgGrid のキーの値を取得。
         # AgGridReturn が入ってるので、最後の返却データっぽい。

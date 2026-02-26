@@ -1,4 +1,6 @@
 import typing
+import time
+import datetime
 
 import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode, AgGridReturn
@@ -211,12 +213,30 @@ def render_debug_info(ctx: RunListContext, grid_return: AgGridReturn) -> None:
                 st.write(ctx.aggrid_state.df)
 
 
+def render_fragment_control():
+    with st.sidebar:
+        st.text("Fragment Control")
+        st.checkbox("Active", key="ticks_active")
+        st.slider("interval",)
+        pass
+
+
+# @st.fragment(run_every=st.session_state.get("12_ticks_run_every", None))
+@st.fragment(run_every=2)
+def ticks():
+    # そもそもの話、その場じゃなくて、スクリプトの最後あたりで保存処理実行させれば、UIの負荷はそんなでもない？
+    dt = datetime.datetime.now()
+    print("tick!", dt.strftime("%H:%M:%S.%f"))
+
+
 def main():
+    print("Main")
 
     st.set_page_config(layout="wide")
 
     page_state = states.PageState()
-    if page_state.visit("page_10"):
+    is_first_visit = page_state.visit("page_12")
+    if is_first_visit:
         print("最初の時の処理")
 
     ctx = RunListContext()
@@ -225,7 +245,21 @@ def main():
     render_grid_buttons(ctx)
     render_data_prosessing(ctx)
     render_debug_info(ctx, grid_return)
-    
-    # ここに処理を書いていく
+    render_fragment_control()
+
+    # NOTE: if で分岐するとダメ。rerun の度呼ばないと実行されないらしい。
+    #       これで保存処理実行させる意味なくね？
+    #       グリッド部分をフラグメントにして、データ変更とファイル保存を別にする？
+    ticks()
+
+
+
+
 if __name__ == "__main__":
     main()
+    
+
+
+
+
+

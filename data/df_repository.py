@@ -21,27 +21,33 @@ def get_file_path() -> str:
     dir = os.path.dirname(__file__)
     return os.path.join(dir, "datafarame.csv")
 
-# @st.cache_data()
-def get_saved_df() -> pd.DataFrame:
+
+def read_df() -> pd.DataFrame:
 
     path = get_file_path()
+
+    print(f"Read dataframe (path={path})")
 
     if os.path.exists(path):
         df = pd.read_csv(path, index_col="index")
     else:
         df = utils.get_test_df()
-        save_df(df)
+        write_df(df)
 
     return df
 
 
-def save_df(df: pd.DataFrame):
+@st.cache_data()
+def get_saved_df() -> pd.DataFrame:
+    return read_df()
+
+
+def write_df(df: pd.DataFrame):
 
     path = get_file_path()
 
     df.index.name = "index"
     df.to_csv(path)
 
-    print(f"Save (path={path})")
+    print(f"Write dataframe (path={path})")
     print(df)
-    

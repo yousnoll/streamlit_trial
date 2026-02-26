@@ -21,7 +21,7 @@ class PageState(SessionStateWrapper):
 
     #endregion
 
-    def first_time(self, id: str, no_update: bool = False) -> bool:
+    def visit(self, id: str, no_update: bool = False) -> bool:
 
         if self.page_id == id:
             return False

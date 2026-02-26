@@ -13,7 +13,7 @@ PAGE_ID: typing.Final[str] = "11"
 st.set_page_config(layout="wide")
 
 page_state = states.PageState()
-if page_state.first_time(PAGE_ID):
+if page_state.visit(PAGE_ID):
     print("最初の時の処理")
 
 st.button("rerun")

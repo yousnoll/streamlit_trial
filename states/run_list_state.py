@@ -45,11 +45,11 @@ class RunListState(SessionStateWrapper):
     #region: df_changed_reasons property
 
     @property
-    def df_changed_reasons(self) -> Optional[list[str]]:
+    def df_changed_reasons(self) -> Optional[set[str]]:
         return self._get_val("df_changed_reasons")
 
     @df_changed_reasons.setter
-    def df_changed_reasons(self, value: Optional[list[str]]) -> None:
+    def df_changed_reasons(self, value: Optional[set[str]]) -> None:
         self._set_val("df_changed_reasons", value)
 
     @df_changed_reasons.deleter
@@ -61,7 +61,7 @@ class RunListState(SessionStateWrapper):
     # TODO: これ単純にフラグじゃなくて、セル編集とドラッグで持たせていた方がいいかも？
     #       ドラッグだけなら融通利く
 
-    def change_df(self, df: pd.DataFrame, reason: Optional[str] = None):
+    def change_df(self, df: pd.DataFrame, *, reason: Optional[str] = None):
         self.df = df
         self.is_df_changed = True
 
@@ -69,7 +69,7 @@ class RunListState(SessionStateWrapper):
             return
         
         if self.df_changed_reasons is None:
-            self.df_changed_reasons = [reason]
+            self.df_changed_reasons = {reason}
         else:
-            self.df_changed_reasons.append(reason)
+            self.df_changed_reasons.add(reason)
 
